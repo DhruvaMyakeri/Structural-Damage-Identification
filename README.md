@@ -28,7 +28,7 @@ The paper used PEER Hub ImageNet (about 5,913 labelled photos). Those files are 
 python download_data.py
 ```
 
-The zips land in `data/zips/`. Training reads those archives directly. `python download_data.py` only downloads. Pass nothing else; unpacking forty thousand small files is optional and slow on Windows.
+The zips land in `data/zips/`. Training reads those archives directly and does not unpack them.
 
 | Split | Undamaged (Negative) | Damaged (Positive) |
 | --- | --- | --- |

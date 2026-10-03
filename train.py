@@ -304,7 +304,6 @@ def main() -> None:
             "KNN k=5": "results/models/knn.joblib",
             "Logistic reg.": "results/models/logistic.joblib",
             "SVM pixels": "results/models/pixel_svm.joblib",
-            "SVM on features": "results/models/hybrid_svm.joblib",
         }[winner["short_name"]]
 
     # Misclassified test photos from the winning neural net, if it is one.

@@ -17,7 +17,6 @@ import numpy as np
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW_DIR = ROOT / "data" / "raw"
 ZIP_DIR = ROOT / "data" / "zips"
 
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png"}
@@ -84,47 +83,6 @@ def list_split_zip(split_name: str, zip_dir: Path = ZIP_DIR) -> tuple[list[tuple
 
 def load_splits(zip_dir: Path = ZIP_DIR) -> dict[str, tuple[list, np.ndarray]]:
     return {name: list_split_zip(name, zip_dir) for name in SPLIT_ZIPS}
-
-
-def find_split_dirs(raw_dir: Path = RAW_DIR) -> dict[str, Path]:
-    """Return train, validation, and test folders that each hold both classes."""
-    found: dict[str, Path] = {}
-    for directory in raw_dir.rglob("*"):
-        if not directory.is_dir():
-            continue
-        child_names = {child.name.lower() for child in directory.iterdir() if child.is_dir()}
-        if "positive" not in child_names or "negative" not in child_names:
-            continue
-        parts = {part.lower() for part in directory.parts}
-        if "validation" in parts or "valid" in parts:
-            found["validation"] = directory
-        elif "test" in parts:
-            found["test"] = directory
-        elif "train" in parts:
-            found["train"] = directory
-    missing = {"train", "validation", "test"} - set(found)
-    if missing:
-        raise FileNotFoundError(
-            f"Could not find class folders for {sorted(missing)} under {raw_dir}. "
-            "Run python download_data.py first."
-        )
-    return found
-
-
-def list_split(split_dir: Path) -> tuple[list[Path], np.ndarray]:
-    paths: list[Path] = []
-    labels: list[int] = []
-    for path in sorted(split_dir.rglob("*")):
-        if path.suffix.lower() not in IMAGE_SUFFIXES:
-            continue
-        label = _class_from_folder(path.parent.name)
-        if label is None:
-            continue
-        paths.append(path)
-        labels.append(label)
-    if not paths:
-        raise FileNotFoundError(f"No images in {split_dir}")
-    return paths, np.asarray(labels, dtype=np.int64)
 
 
 def count_classes(labels: np.ndarray) -> dict[str, int]:
