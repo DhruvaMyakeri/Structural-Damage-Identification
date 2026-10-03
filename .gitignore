@@ -16,3 +16,5 @@ _hf_readme.md
 _hf_sizes.txt
 slide-*.jpg
 writeup_preview.pdf
+generate_writeup.py
+generate_slides.js
