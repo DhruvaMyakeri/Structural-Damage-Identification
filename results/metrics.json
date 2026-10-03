@@ -1,0 +1,336 @@
+{
+  "dataset": {
+    "name": "Concrete Crack Images for Classification",
+    "mirror": "https://huggingface.co/datasets/mohammadnajeeb/concrete_crack_images",
+    "original": "Ozgenel, C. F. Concrete Crack Images for Classification. Mendeley Data, 2019. CC BY 4.0.",
+    "paper_dataset": "PEER Hub ImageNet, 5913 labelled structural photos (Ho and Troncoso, CS229 2018).",
+    "why_not_peer": "PHI-Net images are emailed after a form on apps.peer.berkeley.edu and were not available as a direct download.",
+    "label_map": {
+      "0": "undamaged (Negative, no crack)",
+      "1": "damaged (Positive, crack)"
+    },
+    "counts": {
+      "train": {
+        "undamaged": 12000,
+        "damaged": 12000,
+        "total": 24000
+      },
+      "validation": {
+        "undamaged": 4000,
+        "damaged": 4000,
+        "total": 8000
+      },
+      "test": {
+        "undamaged": 4000,
+        "damaged": 4000,
+        "total": 8000
+      }
+    },
+    "chance_accuracy_test": 0.5
+  },
+  "protocol": {
+    "classical_train_per_class": 1500,
+    "classical_eval_per_class": 2000,
+    "cnn_per_class": 3000,
+    "pixel_size": 32,
+    "seed": 42,
+    "classical_normalisation": "(pixel / 128) - 1 after resize to 32x32, matching the paper's 8-bit formula",
+    "cnn_normalisation": "ImageNet mean and std required by torchvision weights",
+    "split": "The files already ship as train, validation, and test. The paper instead cut one pool 90/10 and did not keep a separate test set.",
+    "model_selection": "The demo checkpoint is the model with the highest validation accuracy. Test accuracy was not used to choose it.",
+    "paper": "Ho, M. and Troncoso, J. Structural Damage Image Classification. Stanford CS229, 2018."
+  },
+  "models": [
+    {
+      "name": "K-nearest neighbours (k=5)",
+      "short_name": "KNN k=5",
+      "train_accuracy": 0.7973333333333333,
+      "val_accuracy": 0.689,
+      "test_accuracy": 0.75125,
+      "precision_damaged": 1.0,
+      "recall_damaged": 0.5025,
+      "f1_damaged": 0.6688851913477537,
+      "confusion_test": [
+        2000,
+        0,
+        995,
+        1005
+      ],
+      "n_train": 3000,
+      "n_val": 4000,
+      "n_test": 4000
+    },
+    {
+      "name": "Logistic regression (L2, C=1)",
+      "short_name": "Logistic reg.",
+      "train_accuracy": 0.9726666666666667,
+      "val_accuracy": 0.816,
+      "test_accuracy": 0.879,
+      "precision_damaged": 0.9582829504232164,
+      "recall_damaged": 0.7925,
+      "f1_damaged": 0.8675424192665573,
+      "confusion_test": [
+        1931,
+        69,
+        415,
+        1585
+      ],
+      "n_train": 3000,
+      "n_val": 4000,
+      "n_test": 4000
+    },
+    {
+      "name": "SVM, RBF, C=1, gamma=0.001",
+      "short_name": "SVM pixels",
+      "train_accuracy": 0.942,
+      "val_accuracy": 0.903,
+      "test_accuracy": 0.92975,
+      "precision_damaged": 0.9886299033541786,
+      "recall_damaged": 0.8695,
+      "f1_damaged": 0.925246076084065,
+      "confusion_test": [
+        1980,
+        20,
+        261,
+        1739
+      ],
+      "n_train": 3000,
+      "n_val": 4000,
+      "n_test": 4000
+    },
+    {
+      "name": "MobileNetV2, frozen backbone",
+      "short_name": "MobileNet frozen",
+      "train_accuracy": 0.9963333333333333,
+      "val_accuracy": 0.992875,
+      "test_accuracy": 0.9945,
+      "precision_damaged": 0.9952428642964447,
+      "recall_damaged": 0.99375,
+      "f1_damaged": 0.9944958719039281,
+      "confusion_test": [
+        3981,
+        19,
+        25,
+        3975
+      ],
+      "n_train": 6000,
+      "n_val": 8000,
+      "n_test": 8000,
+      "image_size": 224,
+      "best_epoch_val_accuracy": 0.992875,
+      "weights": "results/models/mobilenetv2_frozen_backbone.pt",
+      "arch": "mobilenet_v2"
+    },
+    {
+      "name": "MobileNetV2, last blocks unfrozen",
+      "short_name": "MobileNet unfrozen",
+      "train_accuracy": 0.9996666666666667,
+      "val_accuracy": 0.997,
+      "test_accuracy": 0.997,
+      "precision_damaged": 0.9965034965034965,
+      "recall_damaged": 0.9975,
+      "f1_damaged": 0.9970014992503748,
+      "confusion_test": [
+        3986,
+        14,
+        10,
+        3990
+      ],
+      "n_train": 6000,
+      "n_val": 8000,
+      "n_test": 8000,
+      "image_size": 224,
+      "best_epoch_val_accuracy": 0.997,
+      "weights": "results/models/mobilenetv2_last_blocks_unfrozen.pt",
+      "arch": "mobilenet_v2"
+    },
+    {
+      "name": "MobileNetV2, flip and shift",
+      "short_name": "MobileNet + aug",
+      "train_accuracy": 0.9916666666666667,
+      "val_accuracy": 0.992625,
+      "test_accuracy": 0.99025,
+      "precision_damaged": 0.9907407407407407,
+      "recall_damaged": 0.98975,
+      "f1_damaged": 0.9902451225612805,
+      "confusion_test": [
+        3963,
+        37,
+        41,
+        3959
+      ],
+      "n_train": 6000,
+      "n_val": 8000,
+      "n_test": 8000,
+      "image_size": 224,
+      "best_epoch_val_accuracy": 0.992625,
+      "weights": "results/models/mobilenetv2_flip_and_shift.pt",
+      "arch": "mobilenet_v2"
+    },
+    {
+      "name": "InceptionV3, frozen backbone",
+      "short_name": "InceptionV3",
+      "train_accuracy": 0.9918333333333333,
+      "val_accuracy": 0.98775,
+      "test_accuracy": 0.984625,
+      "precision_damaged": 0.9820940064660533,
+      "recall_damaged": 0.98725,
+      "f1_damaged": 0.9846652537090138,
+      "confusion_test": [
+        3928,
+        72,
+        51,
+        3949
+      ],
+      "n_train": 6000,
+      "n_val": 8000,
+      "n_test": 8000,
+      "image_size": 299,
+      "best_epoch_val_accuracy": 0.98775,
+      "weights": "results/models/inceptionv3_frozen_backbone.pt",
+      "arch": "inception_v3"
+    },
+    {
+      "name": "SVM on Inception Mixed_6e (gamma=0.03)",
+      "short_name": "SVM on features",
+      "train_accuracy": 0.9975,
+      "val_accuracy": 0.99875,
+      "test_accuracy": 0.9995833333333334,
+      "precision_damaged": 0.9991673605328892,
+      "recall_damaged": 1.0,
+      "f1_damaged": 0.9995835068721366,
+      "confusion_test": [
+        1199,
+        1,
+        0,
+        1200
+      ],
+      "n_train": 2000,
+      "n_val": 2400,
+      "n_test": 2400,
+      "gamma": 0.03
+    }
+  ],
+  "learning_curve_logistic": {
+    "sizes": [
+      300,
+      900,
+      1500,
+      2100,
+      3000
+    ],
+    "train_accuracy": [
+      1.0,
+      0.9977777777777778,
+      0.9913333333333333,
+      0.9833333333333333,
+      0.9726666666666667
+    ],
+    "val_accuracy": [
+      0.76325,
+      0.8075,
+      0.82025,
+      0.8145,
+      0.8175
+    ]
+  },
+  "cnn_histories": {
+    "MobileNetV2, frozen backbone": {
+      "train_loss": [
+        0.17637102766831717,
+        0.05443815529346466,
+        0.04118603722254435,
+        0.03359375323355198,
+        0.028968029821912447
+      ],
+      "val_accuracy": [
+        0.98775,
+        0.99175,
+        0.99275,
+        0.9925,
+        0.992875
+      ]
+    },
+    "MobileNetV2, last blocks unfrozen": {
+      "train_loss": [
+        0.014480030914147695,
+        0.0028610353072484333,
+        0.0030822579066007165
+      ],
+      "val_accuracy": [
+        0.99675,
+        0.996875,
+        0.997
+      ]
+    },
+    "MobileNetV2, flip and shift": {
+      "train_loss": [
+        0.20544107433160147,
+        0.08567857846617699,
+        0.06962956947088242,
+        0.05841899164517721,
+        0.053792953873674075
+      ],
+      "val_accuracy": [
+        0.983,
+        0.991,
+        0.992625,
+        0.9925,
+        0.99225
+      ]
+    },
+    "InceptionV3, frozen backbone": {
+      "train_loss": [
+        0.2476454877058665,
+        0.13313873235384624,
+        0.11214338552951812,
+        0.11119508306185405
+      ],
+      "val_accuracy": [
+        0.985875,
+        0.983875,
+        0.98775,
+        0.9855
+      ]
+    }
+  },
+  "gamma_sweep": {
+    "gammas": [
+      0.0001,
+      0.0003,
+      0.001,
+      0.003,
+      0.01,
+      0.03
+    ],
+    "val_accuracy": [
+      0.985,
+      0.985,
+      0.99125,
+      0.9970833333333333,
+      0.9983333333333333,
+      0.99875
+    ],
+    "chosen_gamma": 0.03
+  },
+  "demo_model": {
+    "name": "SVM on Inception Mixed_6e (gamma=0.03)",
+    "arch": "hybrid_svm",
+    "weights": null,
+    "image_size": 299,
+    "feature_block": "Mixed_6e",
+    "chosen_by": "validation_accuracy",
+    "val_accuracy": 0.99875,
+    "test_accuracy": 0.9995833333333334,
+    "joblib": "results/models/hybrid_svm.joblib"
+  },
+  "paper_reference_accuracies": {
+    "source": "Ho and Troncoso, Structural Damage Image Classification, CS229 2018, Table 1.",
+    "knn_k5_val": 0.537,
+    "logistic_val": 0.547,
+    "svm_rbf_val": 0.507,
+    "mobilenet_v1_val": 0.67,
+    "inception_v3_val": 0.83,
+    "svm_on_layer_288_val": 0.75
+  }
+}

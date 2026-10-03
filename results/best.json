@@ -1,0 +1,11 @@
+{
+  "name": "SVM on Inception Mixed_6e (gamma=0.03)",
+  "arch": "hybrid_svm",
+  "weights": null,
+  "image_size": 299,
+  "feature_block": "Mixed_6e",
+  "chosen_by": "validation_accuracy",
+  "val_accuracy": 0.99875,
+  "test_accuracy": 0.9995833333333334,
+  "joblib": "results/models/hybrid_svm.joblib"
+}
